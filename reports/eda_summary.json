@@ -1,0 +1,111 @@
+{
+  "record_count": 456548,
+  "feature_count": 15,
+  "features": [
+    "id",
+    "week",
+    "center_id",
+    "meal_id",
+    "checkout_price",
+    "base_price",
+    "emailer_for_promotion",
+    "homepage_featured",
+    "num_orders",
+    "category",
+    "cuisine",
+    "city_code",
+    "region_code",
+    "center_type",
+    "op_area"
+  ],
+  "data_types": {
+    "id": "int64",
+    "week": "int64",
+    "center_id": "int64",
+    "meal_id": "int64",
+    "checkout_price": "float64",
+    "base_price": "float64",
+    "emailer_for_promotion": "int64",
+    "homepage_featured": "int64",
+    "num_orders": "int64",
+    "category": "str",
+    "cuisine": "str",
+    "city_code": "int64",
+    "region_code": "int64",
+    "center_type": "str",
+    "op_area": "float64"
+  },
+  "missing_values": {
+    "id": 0,
+    "week": 0,
+    "center_id": 0,
+    "meal_id": 0,
+    "checkout_price": 0,
+    "base_price": 0,
+    "emailer_for_promotion": 0,
+    "homepage_featured": 0,
+    "num_orders": 0,
+    "category": 0,
+    "cuisine": 0,
+    "city_code": 0,
+    "region_code": 0,
+    "center_type": 0,
+    "op_area": 0
+  },
+  "duplicates": 0,
+  "time_span_weeks": {
+    "min_week": 1,
+    "max_week": 145,
+    "total_weeks": 145
+  },
+  "entities": {
+    "unique_meals": 51,
+    "unique_categories": 14,
+    "unique_cuisines": 4,
+    "unique_centers": 77,
+    "unique_cities": 51,
+    "unique_regions": 8
+  },
+  "target_distribution (num_orders)": {
+    "mean": 261.87,
+    "std": 395.92,
+    "median": 136.0,
+    "min": 13,
+    "max": 24299,
+    "skewness": 6.93,
+    "kurtosis": 121.85,
+    "q25": 54.0,
+    "q75": 324.0,
+    "iqr_outliers_count": 32937,
+    "iqr_outliers_pct": 7.21
+  },
+  "pricing_and_promotions": {
+    "avg_base_price": 354.16,
+    "avg_checkout_price": 332.24,
+    "avg_discount_pct": 5.72,
+    "emailer_promo_share_pct": 8.12,
+    "homepage_featured_share_pct": 10.92
+  },
+  "top_categories_by_orders": {
+    "Beverages": 40480525,
+    "Rice Bowl": 20874063,
+    "Sandwich": 17636782,
+    "Salad": 10944336,
+    "Pizza": 7383720,
+    "Other Snacks": 4766293,
+    "Starters": 4649122,
+    "Extras": 3984979,
+    "Seafood": 2715714,
+    "Desert": 1940754,
+    "Pasta": 1637744,
+    "Soup": 1039646,
+    "Fish": 871959,
+    "Biryani": 631848
+  },
+  "top_cuisines_by_orders": {
+    "Italian": 44172832,
+    "Thai": 32677670,
+    "Indian": 25792544,
+    "Continental": 16914439
+  }
+}

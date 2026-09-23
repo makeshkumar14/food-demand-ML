@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Jupyter Notebooks Checkpoints
+.ipynb_checkpoints
+
+# Environment variables
+.env
+
+# SQLite Database (for local dev)
+*.db
+*.sqlite3
+
+# OS generated
+.DS_Store
+Thumbs.db
+
+# Model binaries if large (tracked via git-lfs or joblib directory)
+models/*.joblib
+!models/.gitkeep
+
+# Processed data
+data/processed/*.csv
+data/processed/*.parquet
