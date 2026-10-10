@@ -30,7 +30,7 @@ FULFILMENT_CENTER_CSV = RAW_DATA_DIR / "fulfilment_center_info.csv"
 CLEANED_DATA_PATH = PROCESSED_DATA_DIR / "cleaned_data.parquet"
 FEATURE_DATA_PATH = PROCESSED_DATA_DIR / "features_data.parquet"
 
-MODEL_FILE = MODELS_DIR / "xgboost_demand_model.joblib"
+MODEL_FILE = MODELS_DIR / "lightgbm_demand_model.joblib"
 BASELINE_METRICS_FILE = MODELS_DIR / "baseline_metrics.json"
 MODEL_METRICS_FILE = MODELS_DIR / "model_metrics.json"
 

@@ -144,7 +144,7 @@ def train_and_evaluate_models() -> dict:
     comparison = {
         "model_features": FEATURE_COLUMNS,
         "baseline_test": baseline_results["test"],
-        "xgboost_test": test_metrics,
+        "lightgbm_test": test_metrics,
         "improvement_pct": {
             "MAE_reduction": round(((baseline_results["test"]["MAE"] - test_metrics["MAE"]) / baseline_results["test"]["MAE"]) * 100, 2),
             "RMSE_reduction": round(((baseline_results["test"]["RMSE"] - test_metrics["RMSE"]) / baseline_results["test"]["RMSE"]) * 100, 2),
@@ -195,9 +195,9 @@ if __name__ == "__main__":
     print("      FINAL MODEL COMPARISON RESULTS      ")
     print("==========================================")
     print(f"Baseline Test MAE:  {results['baseline_test']['MAE']}")
-    print(f"LightGBM Test MAE:   {results['xgboost_test']['MAE']} (Reduced by {results['improvement_pct']['MAE_reduction']}%)")
+    print(f"LightGBM Test MAE:   {results['lightgbm_test']['MAE']} (Reduced by {results['improvement_pct']['MAE_reduction']}%)")
     print(f"Baseline Test RMSE:  {results['baseline_test']['RMSE']}")
-    print(f"LightGBM Test RMSE:  {results['xgboost_test']['RMSE']} (Reduced by {results['improvement_pct']['RMSE_reduction']}%)")
+    print(f"LightGBM Test RMSE:  {results['lightgbm_test']['RMSE']} (Reduced by {results['improvement_pct']['RMSE_reduction']}%)")
     print(f"Baseline Test MAPE:  {results['baseline_test']['MAPE']}%")
-    print(f"LightGBM Test MAPE:  {results['xgboost_test']['MAPE']}% (Reduced by {results['improvement_pct']['MAPE_reduction']}%)")
+    print(f"LightGBM Test MAPE:  {results['lightgbm_test']['MAPE']}% (Reduced by {results['improvement_pct']['MAPE_reduction']}%)")
     print("==========================================")

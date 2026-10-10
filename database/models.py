@@ -71,7 +71,7 @@ class ForecastRecord(Base):
     food_item_id = Column(Integer, ForeignKey("food_items.id"), nullable=False)
     forecast_date = Column(String(20), nullable=False)
     predicted_demand = Column(Float, nullable=False)
-    model_version = Column(String(50), default="XGBoost_v1.0")
+    model_version = Column(String(50), default="LightGBM_v1.0")
     created_at = Column(DateTime, default=datetime.utcnow)
 
     food_item = relationship("FoodItem", back_populates="forecasts")

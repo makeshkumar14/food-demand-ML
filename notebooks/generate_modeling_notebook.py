@@ -12,11 +12,11 @@ cells = [
         "cell_type": "markdown",
         "metadata": {},
         "source": [
-            "# Phase 2 & 3: Time-Series Feature Engineering & XGBoost Modeling\n",
+            "# Phase 2 & 3: Time-Series Feature Engineering & LightGBM Modeling\n",
             "## Food Demand Forecasting & Inventory Optimization System\n",
             "\n",
             "**Academic Context:** B.Tech CSE Project Evaluation  \n",
-            "**Goal:** Build lag features, enforce strict anti-leakage guards, train XGBoost regressor, benchmark against a 7-week moving average, and calculate safety stock."
+            "**Goal:** Build lag features, enforce strict anti-leakage guards, train LightGBM regressor, benchmark against a 7-week moving average, and calculate safety stock."
         ]
     },
     {
@@ -66,7 +66,7 @@ cells = [
         "cell_type": "markdown",
         "metadata": {},
         "source": [
-            "### 2. Benchmark Comparison: Moving Average Baseline vs. XGBoost Regressor"
+            "### 2. Benchmark Comparison: Moving Average Baseline vs. LightGBM Regressor"
         ]
     },
     {
@@ -78,7 +78,7 @@ cells = [
             "results = train_and_evaluate_models()\n",
             "comp_df = pd.DataFrame([\n",
             "    {'Model': '7-Week Moving Average Baseline', **results['baseline_test']},\n",
-            "    {'Model': 'XGBoost Regressor (Engineered Lags)', **results['xgboost_test']},\n",
+            "    {'Model': 'LightGBM Regressor (Engineered Lags)', **results['lightgbm_test']},\n",
             "])\n",
             "comp_df"
         ]

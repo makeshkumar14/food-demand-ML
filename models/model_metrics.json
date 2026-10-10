@@ -29,7 +29,7 @@
     "RMSE": 166.05,
     "MAPE": 67.66
   },
-  "xgboost_test": {
+  "lightgbm_test": {
     "MAE": 63.37,
     "RMSE": 109.39,
     "MAPE": 43.18

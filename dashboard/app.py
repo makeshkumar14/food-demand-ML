@@ -1,6 +1,6 @@
 """
 Streamlit Web Dashboard for Food Demand Forecasting & Inventory Optimization.
-Day-by-day forecast breakdown from weekly XGBoost predictions.
+Day-by-day forecast breakdown from weekly LightGBM predictions.
 """
 
 import sys
@@ -139,7 +139,7 @@ if "daily_forecast" not in st.session_state:
 
 def generate_daily_forecast(weekly_pred: float, start_date: datetime, horizon_weeks: int = 2) -> pd.DataFrame:
     """
-    Converts a weekly XGBoost forecast into a day-by-day demand breakdown
+    Converts a weekly LightGBM forecast into a day-by-day demand breakdown
     across the given number of weeks using realistic intra-week day weights.
     """
     rows = []
@@ -300,7 +300,7 @@ if nav_tab == "📈 Demand Forecasting":
 # ═══════════════════════════════════════════════════════════════════════════════
 elif nav_tab == "📅 Day-by-Day Forecast":
     st.markdown("## **Day-by-Day Demand Forecast**")
-    st.caption("Daily breakdown of food order predictions for the coming days, derived from the XGBoost weekly model.")
+    st.caption("Daily breakdown of food order predictions for the coming days, derived from the LightGBM weekly model.")
 
     # ── SIDEBAR ──
     st.sidebar.markdown("### Forecast inputs")
@@ -484,7 +484,7 @@ elif nav_tab == "🎯 Viva Metrics":
     if MODEL_METRICS_FILE.exists():
         with open(MODEL_METRICS_FILE, "r") as f:
             m = json.load(f)
-        b, x, imp = m["baseline_test"], m["xgboost_test"], m["improvement_pct"]
+        b, x, imp = m["baseline_test"], m["lightgbm_test"], m["improvement_pct"]
         k1, k2, k3 = st.columns(3)
         k1.metric("MAE", f"{x['MAE']}", f"-{imp['MAE_reduction']}% vs Baseline")
         k2.metric("RMSE", f"{x['RMSE']}", f"-{imp['RMSE_reduction']}% vs Baseline")
@@ -492,7 +492,7 @@ elif nav_tab == "🎯 Viva Metrics":
         st.subheader("Model Benchmark Comparison")
         st.table(pd.DataFrame([
             {"Model": "7-Week Moving Average Baseline", "MAE": b["MAE"], "RMSE": b["RMSE"], "MAPE": f"{b['MAPE']}%"},
-            {"Model": "XGBoost Regressor (Our Model)", "MAE": x["MAE"], "RMSE": x["RMSE"], "MAPE": f"{x['MAPE']}%"}
+            {"Model": "LightGBM Regressor (Our Model)", "MAE": x["MAE"], "RMSE": x["RMSE"], "MAPE": f"{x['MAPE']}%"}
         ]))
         imp_fig = FIGURES_DIR / "7_feature_importance.png"
         pred_fig = FIGURES_DIR / "8_actual_vs_predicted.png"

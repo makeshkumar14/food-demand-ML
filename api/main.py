@@ -111,7 +111,7 @@ def predict_demand(req: PredictRequest, db: Session = Depends(get_db)):
             food_item_id=db_item.id,
             forecast_date=req.date or "2026-10-01",
             predicted_demand=predicted_val,
-            model_version="XGBoost_v1.0"
+            model_version="LightGBM_v1.0"
         )
         db.add(forecast_entry)
         db.commit()
@@ -187,7 +187,7 @@ def get_model_info():
     if MODEL_METRICS_FILE.exists():
         with open(MODEL_METRICS_FILE, "r") as f:
             data = json.load(f)
-        data["model_version"] = "XGBoost_v1.0"
+        data["model_version"] = "LightGBM_v1.0"
         return data
     return {"message": "Model metrics file not found."}
 

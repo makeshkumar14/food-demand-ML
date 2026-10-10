@@ -71,6 +71,6 @@ class FoodItemOut(BaseModel):
 
 class ModelMetricsResponse(BaseModel):
     baseline_test: Dict[str, float]
-    xgboost_test: Dict[str, float]
+    lightgbm_test: Dict[str, float]
     improvement_pct: Dict[str, float]
     model_version: str
