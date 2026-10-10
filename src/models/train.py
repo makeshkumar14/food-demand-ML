@@ -1,6 +1,6 @@
 """
 Model Training and Evaluation Pipeline.
-Trains an XGBoost regressor with log-transformed targets,
+Trains a LightGBM regressor with log-transformed targets,
 benchmarks against the 7-week moving average baseline,
 computes production metrics, and persists artifacts.
 """
@@ -11,7 +11,7 @@ import json
 import joblib
 import pandas as pd
 import numpy as np
-import xgboost as xgb
+import lightgbm as lgb
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -63,7 +63,7 @@ def train_and_evaluate_models() -> dict:
     Executes the training workflow:
     1. Loads features
     2. Runs Baseline Benchmark
-    3. Trains XGBoost Regressor
+    3. Trains LightGBM Regressor
     4. Computes test metrics & comparison table
     5. Saves model and visualizations
     """
@@ -83,7 +83,7 @@ def train_and_evaluate_models() -> dict:
     baseline_results = evaluate_baseline(val_df, test_df)
 
     # 3. Prepare Feature Matrices and Log-Transformed Targets
-    logger.info("Preparing feature matrices for XGBoost...")
+    logger.info("Preparing feature matrices for LightGBM...")
     X_train = train_df[FEATURE_COLUMNS]
     y_train_log = np.log1p(train_df["num_orders"].values)
 
@@ -93,27 +93,29 @@ def train_and_evaluate_models() -> dict:
     X_test = test_df[FEATURE_COLUMNS]
     y_test_actual = test_df["num_orders"].values
 
-    # 4. Instantiate and Train XGBoost Regressor
-    logger.info("Training XGBoost Regressor with early stopping...")
-    model = xgb.XGBRegressor(
+        # 4. Instantiate and Train LightGBM Regressor
+    logger.info("Training LightGBM Regressor with early stopping...")
+    model = lgb.LGBMRegressor(
         n_estimators=300,
         learning_rate=0.08,
         max_depth=6,
+        num_leaves=63,
         subsample=0.8,
         colsample_bytree=0.8,
         random_state=42,
         n_jobs=-1,
-        early_stopping_rounds=25,
-        eval_metric="rmse",
     )
 
     model.fit(
         X_train,
         y_train_log,
         eval_set=[(X_val, y_val_log)],
-        verbose=50,
+        callbacks=[
+            lgb.early_stopping(stopping_rounds=25, verbose=False),
+            lgb.log_evaluation(period=-1),
+        ],
     )
-    logger.info(f"Training completed. Best iteration: {model.best_iteration}")
+    logger.info(f"Training completed. Best iteration: {model.best_iteration_}")
 
     # 5. Invert Predictions to Original Unit Scale
     logger.info("Generating predictions and converting back to natural demand scale...")
@@ -125,7 +127,7 @@ def train_and_evaluate_models() -> dict:
     test_pred = np.maximum(0.0, np.expm1(test_pred_log))
     test_metrics = compute_metrics(y_test_actual, test_pred)
 
-    logger.info(f"XGBoost Test Metrics: MAE={test_metrics['MAE']}, RMSE={test_metrics['RMSE']}, MAPE={test_metrics['MAPE']}%")
+    logger.info(f"LightGBM Test Metrics: MAE={test_metrics['MAE']}, RMSE={test_metrics['RMSE']}, MAPE={test_metrics['MAPE']}%")
 
     # 6. Save Trained Model Artifact
     logger.info(f"Persisting model artifact to {MODEL_FILE}...")
@@ -133,7 +135,7 @@ def train_and_evaluate_models() -> dict:
         "model": model,
         "feature_names": FEATURE_COLUMNS,
         "metrics": test_metrics,
-        "best_iteration": int(model.best_iteration),
+        "best_iteration": int(model.best_iteration_),
     }
     joblib.dump(model_payload, MODEL_FILE)
     logger.info("Model artifact successfully saved.")
@@ -163,7 +165,7 @@ def train_and_evaluate_models() -> dict:
     }).sort_values(by="Importance", ascending=False)
     
     sns.barplot(data=importance_df.head(15), x="Importance", y="Feature", palette="mako")
-    plt.title("Top 15 Feature Importances (XGBoost)", fontsize=14, fontweight="bold", pad=12)
+    plt.title("Top 15 Feature Importances (LightGBM)", fontsize=14, fontweight="bold", pad=12)
     plt.xlabel("Relative Feature Importance (Gain)", fontsize=11)
     plt.tight_layout()
     plt.savefig(FIGURES_DIR / "7_feature_importance.png")
@@ -174,7 +176,7 @@ def train_and_evaluate_models() -> dict:
     sample_indices = np.random.RandomState(42).choice(len(y_test_actual), size=min(100, len(y_test_actual)), replace=False)
     sample_indices = np.sort(sample_indices)
     plt.plot(range(len(sample_indices)), y_test_actual[sample_indices], label="Actual Demand", color="#1f77b4", marker="o", markersize=4, lw=1.5)
-    plt.plot(range(len(sample_indices)), test_pred[sample_indices], label="XGBoost Predicted", color="#ff7f0e", marker="x", markersize=4, linestyle="--", lw=1.5)
+    plt.plot(range(len(sample_indices)), test_pred[sample_indices], label="LightGBM Predicted", color="#ff7f0e", marker="x", markersize=4, linestyle="--", lw=1.5)
     plt.title("Actual vs. Predicted Demand (Held-Out Test Sample)", fontsize=13, fontweight="bold", pad=12)
     plt.xlabel("Sample Index", fontsize=11)
     plt.ylabel("Food Orders", fontsize=11)
@@ -193,9 +195,9 @@ if __name__ == "__main__":
     print("      FINAL MODEL COMPARISON RESULTS      ")
     print("==========================================")
     print(f"Baseline Test MAE:  {results['baseline_test']['MAE']}")
-    print(f"XGBoost Test MAE:   {results['xgboost_test']['MAE']} (Reduced by {results['improvement_pct']['MAE_reduction']}%)")
-    print(f"Baseline Test RMSE: {results['baseline_test']['RMSE']}")
-    print(f"XGBoost Test RMSE:  {results['xgboost_test']['RMSE']} (Reduced by {results['improvement_pct']['RMSE_reduction']}%)")
-    print(f"Baseline Test MAPE: {results['baseline_test']['MAPE']}%")
-    print(f"XGBoost Test MAPE:  {results['xgboost_test']['MAPE']}% (Reduced by {results['improvement_pct']['MAPE_reduction']}%)")
+    print(f"LightGBM Test MAE:   {results['xgboost_test']['MAE']} (Reduced by {results['improvement_pct']['MAE_reduction']}%)")
+    print(f"Baseline Test RMSE:  {results['baseline_test']['RMSE']}")
+    print(f"LightGBM Test RMSE:  {results['xgboost_test']['RMSE']} (Reduced by {results['improvement_pct']['RMSE_reduction']}%)")
+    print(f"Baseline Test MAPE:  {results['baseline_test']['MAPE']}%")
+    print(f"LightGBM Test MAPE:  {results['xgboost_test']['MAPE']}% (Reduced by {results['improvement_pct']['MAPE_reduction']}%)")
     print("==========================================")

@@ -27,33 +27,77 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Dark Theme CSS
+# Minimal black theme with subtle glass surfaces
 st.markdown("""
 <style>
-    .stApp { background-color: #0e1117; color: #f1f5f9; }
-    section[data-testid="stSidebar"] { background-color: #161a23; border-right: 1px solid #232838; }
+    :root {
+        --page: #000000;
+        --surface: rgba(255, 255, 255, 0.035);
+        --surface-hover: rgba(255, 255, 255, 0.075);
+        --line: rgba(255, 255, 255, 0.11);
+        --text: #ececec;
+        --muted: #9b9b9b;
+        --accent: #10a37f;
+    }
+    .stApp, [data-testid="stAppViewContainer"], [data-testid="stHeader"] {
+        background: var(--page); color: var(--text);
+    }
+    [data-testid="stHeader"] { background: rgba(0, 0, 0, 0.82); }
+    .block-container { max-width: 1440px; padding-top: 2rem; padding-bottom: 3rem; }
+    section[data-testid="stSidebar"] {
+        background: rgba(10, 10, 10, 0.9);
+        border-right: 1px solid var(--line);
+    }
+    section[data-testid="stSidebar"] > div { background: transparent; }
+    h1, h2, h3, h4, p, label, [data-testid="stMarkdownContainer"] { color: var(--text); }
+    [data-testid="stCaptionContainer"], small { color: var(--muted) !important; }
+    [data-testid="stMetric"] {
+        background: var(--surface); border: 1px solid var(--line);
+        border-radius: 12px; padding: 1rem 1.1rem;
+    }
+    [data-testid="stMetricLabel"] { color: var(--muted) !important; }
+    [data-testid="stMetricValue"] { color: var(--text) !important; }
+    [data-testid="stRadio"] > div { gap: 0.35rem; }
+    [data-testid="stRadio"] label {
+        border: 1px solid var(--line); border-radius: 999px;
+        background: var(--surface); padding: 0.45rem 0.85rem;
+    }
+    [data-testid="stRadio"] label:hover { background: var(--surface-hover); }
+    [data-testid="stSelectbox"] [data-baseweb="select"] > div,
+    [data-testid="stNumberInput"] input, [data-testid="stDateInput"] input {
+        background: rgba(255, 255, 255, 0.045); color: var(--text);
+        border-color: var(--line); border-radius: 9px;
+    }
+    [data-testid="stExpander"] {
+        background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+    }
+    [data-testid="stDataFrame"] { border: 1px solid var(--line); border-radius: 10px; }
+    hr { border-color: var(--line); }
     div.stButton > button:first-child {
-        background-color: #ef4444; color: white; border: none;
-        border-radius: 6px; padding: 0.5rem 1.8rem;
-        font-weight: 600; font-size: 1rem; transition: all 0.2s ease;
+        background: var(--accent); color: white; border: 1px solid var(--accent);
+        border-radius: 9px; padding: 0.55rem 1.2rem;
+        font-weight: 600; font-size: 0.95rem; transition: all 0.2s ease;
     }
     div.stButton > button:first-child:hover {
-        background-color: #dc2626; box-shadow: 0 4px 12px rgba(239,68,68,0.3);
+        background: #0b8c6d; border-color: #0b8c6d;
     }
     .metric-box {
-        background-color: #1a1e2b; border: 1px solid #282f44;
-        border-radius: 8px; padding: 16px; margin-top: 8px;
+        background: var(--surface); border: 1px solid var(--line);
+        border-radius: 12px; padding: 18px; margin-top: 10px;
     }
-    .metric-value { font-size: 26px; font-weight: 700; color: #38bdf8; }
-    .metric-label { font-size: 12px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; }
+    .metric-value { font-size: 26px; font-weight: 700; color: #f5f5f5; }
+    .metric-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.7px; }
     .day-card {
-        background-color: #1a1e2b; border: 1px solid #282f44; border-radius: 8px;
-        padding: 12px 10px; text-align: center; margin: 4px;
+        background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+        padding: 14px 10px; text-align: center; margin: 4px;
     }
-    .day-name { font-size: 12px; color: #64748b; font-weight: 600; letter-spacing: 0.5px; }
-    .day-date { font-size: 11px; color: #475569; margin-bottom: 6px; }
-    .day-demand { font-size: 22px; font-weight: 700; color: #38bdf8; }
-    .day-unit { font-size: 11px; color: #64748b; }
+    .day-name { font-size: 12px; color: #d4d4d4; font-weight: 600; letter-spacing: 0.3px; }
+    .day-date { font-size: 11px; color: var(--muted); margin-bottom: 6px; }
+    .day-demand { font-size: 22px; font-weight: 700; color: #f5f5f5; }
+    .day-unit { font-size: 11px; color: var(--muted); }
+    @media (max-width: 700px) {
+        .block-container { padding: 1rem 1rem 2rem; }
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -233,7 +277,7 @@ if nav_tab == "📈 Demand Forecasting":
                     fig.add_trace(go.Scatter(x=[series["week"].iloc[-1], p["week"]], y=[series["num_orders"].iloc[-1], p["pred"]],
                         mode="lines", line=dict(color="#ef4444", width=2, dash="dot"), showlegend=False))
         fig.update_layout(
-            paper_bgcolor="#0e1117", plot_bgcolor="#0e1117",
+            paper_bgcolor="#000000", plot_bgcolor="#000000",
             margin=dict(l=40, r=20, t=20, b=40),
             xaxis=dict(title="week", tickfont=dict(color="#94a3b8"), showgrid=True, gridcolor="#1e293b", dtick=10),
             yaxis=dict(title="Historical orders", tickfont=dict(color="#94a3b8"), showgrid=True, gridcolor="#1e293b"),
@@ -364,7 +408,7 @@ elif nav_tab == "📅 Day-by-Day Forecast":
             marker=dict(size=5)
         ))
         fig2.update_layout(
-            paper_bgcolor="#0e1117", plot_bgcolor="#0e1117",
+            paper_bgcolor="#000000", plot_bgcolor="#000000",
             margin=dict(l=30, r=20, t=20, b=60),
             xaxis=dict(tickfont=dict(color="#94a3b8", size=10), showgrid=False),
             yaxis=dict(title="Portions Required", tickfont=dict(color="#94a3b8"), showgrid=True, gridcolor="#1e293b"),

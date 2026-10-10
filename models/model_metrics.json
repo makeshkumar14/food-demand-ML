@@ -30,13 +30,13 @@
     "MAPE": 67.66
   },
   "xgboost_test": {
-    "MAE": 63.39,
-    "RMSE": 110.27,
-    "MAPE": 43.1
+    "MAE": 63.37,
+    "RMSE": 109.39,
+    "MAPE": 43.18
   },
   "improvement_pct": {
-    "MAE_reduction": 25.24,
-    "RMSE_reduction": 33.59,
-    "MAPE_reduction": 36.3
+    "MAE_reduction": 25.26,
+    "RMSE_reduction": 34.12,
+    "MAPE_reduction": 36.18
   }
 }
